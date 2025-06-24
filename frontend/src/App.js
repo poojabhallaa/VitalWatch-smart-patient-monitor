@@ -293,7 +293,7 @@ const VitalWatchApp = () => {
                     </div>
                     <button
   onClick={() => {
-   fetch("https://vitalwatch-smart-patient-monitor.onrender.com/start-monitoring", { method: "POST" })
+   fetch("http://127.0.0.1:8000/start-monitoring", { method: "POST" })
   .then(res => res.json())
   .then(data => {
     console.log(data);
