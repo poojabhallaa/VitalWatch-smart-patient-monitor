@@ -1,123 +1,129 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, Users, Activity, Bell, Shield, Heart, Eye, AlertTriangle, CheckCircle, Clock, User, Lock, Stethoscope } from 'lucide-react';
+import { 
+  Users, 
+  Bell, 
+  Camera, 
+  User, 
+  CheckCircle, 
+  AlertTriangle,
+  Stethoscope,
+  Eye,
+  EyeOff
+} from 'lucide-react';
 
 const VitalWatchApp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState('');
   const [currentView, setCurrentView] = useState('monitor');
-  const [alerts, setAlerts] = useState([
-    { id: 1, type: 'urgent', message: 'Patient 302 - Elevated heart rate detected', time: '2 min ago', room: '302' },
-    { id: 2, type: 'warning', message: 'Patient 215 - Unusual movement pattern', time: '5 min ago', room: '215' },
-  ]);
+  const [userRole, setUserRole] = useState('');
   const [isMonitoring, setIsMonitoring] = useState(false);
+  const [alerts, setAlerts] = useState([]);
   const [monitoringData, setMonitoringData] = useState({
     patientsMonitored: 12,
-    activeAlerts: 2,
-    systemStatus: 'optimal'
+    activeAlerts: 3,
+    systemStatus: 'operational'
   });
+
+  const navItems = [
+    { id: 'monitor', label: 'Monitor', icon: Camera },
+    { id: 'patients', label: 'Patients', icon: Users },
+  ];
 
   // Login Component
   const LoginPage = () => {
-    const [credentials, setCredentials] = useState({ username: '', password: '', role: 'nurse' });
-    const [isLoading, setIsLoading] = useState(false);
+    const [selectedRole, setSelectedRole] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleLogin = (e) => {
-      e.preventDefault();
-      setIsLoading(true);
-      // Simulate login process
-      setTimeout(() => {
-        setUserRole(credentials.role);
+    const handleLogin = () => {
+      if (selectedRole && username && password) {
+        setUserRole(selectedRole);
         setIsLoggedIn(true);
-        setIsLoading(false);
-      }, 1500);
+      }
     };
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
           <div className="text-center mb-8">
-            <div className="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Heart className="text-white w-8 h-8" />
+            <div className="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <img 
+                src="medical_white.png" 
+                alt="VitalWatch Logo" 
+                className="w-10 h-10 object-contain"
+              />
             </div>
             <h1 className="text-3xl font-bold text-blue-900 mb-2">VitalWatch</h1>
-            <p className="text-blue-600">Smart Patient Monitoring System</p>
+            <p className="text-blue-600">Smart Monitoring System</p>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div>
-              <div className="block text-blue-700 font-medium mb-2">Username</div>
-              <div className="relative">
-                <User className="absolute left-3 top-3 text-blue-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={credentials.username}
-                  onChange={(e) => setCredentials({...credentials, username: e.target.value})}
-                  className="w-full pl-10 pr-4 py-3 border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-                  placeholder="Enter your username"
-                />
-              </div>
+              <label className="block text-blue-700 font-medium mb-2">Username</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter your username"
+                className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
             </div>
 
             <div>
-              <div className="block text-blue-700 font-medium mb-2">Password</div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 text-blue-400 w-5 h-5" />
-                <input
-                  type="password"
-                  value={credentials.password}
-                  onChange={(e) => setCredentials({...credentials, password: e.target.value})}
-                  className="w-full pl-10 pr-4 py-3 border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-                  placeholder="Enter your password"
-                />
-              </div>
+              <label className="block text-blue-700 font-medium mb-2">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
             </div>
 
             <div>
-              <div className="block text-blue-700 font-medium mb-2">Role</div>
-              <div className="flex space-x-4">
+              <label className="block text-blue-700 font-medium mb-3">Select Your Role</label>
+              <div className="space-y-3">
                 <div className="flex items-center">
                   <input
                     type="radio"
+                    id="doctor"
                     name="role"
-                    value="nurse"
-                    checked={credentials.role === 'nurse'}
-                    onChange={(e) => setCredentials({...credentials, role: e.target.value})}
-                    className="mr-2 text-blue-600"
+                    value="doctor"
+                    checked={selectedRole === 'doctor'}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                    className="w-4 h-4 text-blue-600 border-blue-300 focus:ring-blue-500"
                   />
-                  <span className="text-blue-700">Nurse</span>
+                  <label htmlFor="doctor" className="ml-3 text-blue-700 font-medium cursor-pointer">
+                    Doctor
+                  </label>
                 </div>
                 <div className="flex items-center">
                   <input
                     type="radio"
+                    id="nurse"
                     name="role"
-                    value="doctor"
-                    checked={credentials.role === 'doctor'}
-                    onChange={(e) => setCredentials({...credentials, role: e.target.value})}
-                    className="mr-2 text-blue-600"
+                    value="nurse"
+                    checked={selectedRole === 'nurse'}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                    className="w-4 h-4 text-blue-600 border-blue-300 focus:ring-blue-500"
                   />
-                  <span className="text-blue-700">Doctor</span>
+                  <label htmlFor="nurse" className="ml-3 text-blue-700 font-medium cursor-pointer">
+                    Nurse
+                  </label>
                 </div>
               </div>
             </div>
 
             <button
               onClick={handleLogin}
-              disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              disabled={!selectedRole || !username || !password}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
             >
-              {isLoading ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Signing In...
-                </>
-              ) : (
-                'Sign In'
-              )}
+              Login to VitalWatch
             </button>
           </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-blue-600 text-sm">Secure healthcare monitoring access</p>
+          <div className="mt-6 text-center text-blue-600 text-sm">
+            <p>Secure healthcare monitoring platform</p>
           </div>
         </div>
       </div>
@@ -126,17 +132,16 @@ const VitalWatchApp = () => {
 
   // Navigation Component
   const Navbar = () => {
-    const navItems = [
-      { id: 'monitor', label: 'Monitor', icon: Camera },
-       { id: 'patients', label: 'Patients', icon: Users },
-    ];
-
     return (
       <nav className="bg-white border-b-2 border-blue-100 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="bg-blue-600 w-10 h-10 rounded-lg flex items-center justify-center">
-              <Heart className="text-white w-6 h-6" />
+              <img 
+                src="medical_white.png" 
+                alt="VitalWatch Logo" 
+                className="w-6 h-6 object-contain"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-blue-900">VitalWatch</h1>
@@ -292,24 +297,22 @@ const VitalWatchApp = () => {
                       </span>
                     </div>
                     <button
-  onClick={() => {
-   fetch("http://127.0.0.1:8000/start-monitoring", { method: "POST" })
-  .then(res => res.json())
-  .then(data => {
-    console.log(data);
-    alert("Monitoring Started");
-  })
-  .catch(err => {
-    console.error("Error:", err);
-  });
-
-  }}
-  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
->
-  <Camera className="w-4 h-4" />
-  <span>Start Monitoring</span>
-</button>
-
+                      onClick={() => {
+                        fetch("http://127.0.0.1:8000/start-monitoring", { method: "POST" })
+                          .then(res => res.json())
+                          .then(data => {
+                            console.log(data);
+                            alert("Monitoring Started");
+                          })
+                          .catch(err => {
+                            console.error("Error:", err);
+                          });
+                      }}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                    >
+                      <Camera className="w-4 h-4" />
+                      <span>Start Monitoring</span>
+                    </button>
                   </div>
                 </div>
               </div>
