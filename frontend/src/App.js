@@ -435,7 +435,15 @@ const VitalWatchApp = () => {
           </div>
         </div>
 
-        
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-orange-500">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-orange-600">Active Alerts</p>
+              <p className="text-2xl font-bold text-gray-900">{dashboardStats.unacknowledged_alerts}</p>
+            </div>
+            <AlertTriangle className="h-8 w-8 text-orange-600" />
+          </div>
+        </div>
 
         <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-green-500">
           <div className="flex items-center justify-between">
